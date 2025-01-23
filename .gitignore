@@ -18,5 +18,8 @@ ENV/
 env.bak/
 venv.bak/
 
+# DS_Store files
+.DS_Store
+
 # ignore Data directory
 data/
