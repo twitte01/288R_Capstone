@@ -1,0 +1,118 @@
+import torch
+import torch.optim as optim
+import torch.nn as nn
+from torch.utils.data import DataLoader
+from dataset import SpeechCommandsDataset  # Import dataset
+from model import create_model  # Import model
+import torchvision.transforms as transforms
+import os
+
+# Define device (MPS or CPU or GPU)
+#device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
+
+
+# # Load dataset
+# data_dir = "data/images/Speech Commands (trimmed)"
+# val_list_path = "validation_list.txt"
+
+def load_filenames(file_path):
+    with open(file_path, "r") as f:
+        return set(line.strip().replace(".wav", ".png") for line in f.readlines())
+
+if __name__ == "__main__":  # <-- Add this to prevent multiprocessing issues
+    # Load dataset
+    data_dir = "data/images/Speech Commands (trimmed)"
+    val_list_path = "validation_list.txt"
+    val_filenames = load_filenames(val_list_path)
+
+    # Define transforms
+    transform = transforms.Compose([
+        transforms.Resize((64, 64)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.5], std=[0.5])
+    ])
+
+    # Create datasets
+    train_dataset = SpeechCommandsDataset(data_dir, file_list=None, transform=transform)
+    val_dataset = SpeechCommandsDataset(data_dir, file_list=val_filenames, transform=transform)
+
+    # Create DataLoaders
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4, pin_memory=True)
+    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=4, pin_memory=True)
+
+    # Load model
+    model = create_model(num_classes=len(train_dataset.classes))
+    model.to(device)
+
+    # Define loss and optimizer
+    criterion = nn.NLLLoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+    # Training function
+    def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=10, patience=3, print_every=10):
+        best_val_loss = float("inf")
+        early_stop_counter = 0
+
+        for epoch in range(epochs):
+            model.train()
+            running_loss = 0.0
+            correct, total = 0, 0
+
+            for batch_idx, (images, labels) in enumerate(train_loader):
+                images, labels = images.to(device), labels.to(device)
+
+                optimizer.zero_grad()
+                outputs = model(images)
+                loss = criterion(outputs, labels)
+                loss.backward()
+                optimizer.step()
+
+                running_loss += loss.item()
+                _, predicted = torch.max(outputs, 1)
+                correct += (predicted == labels).sum().item()
+                total += labels.size(0)
+
+                if (batch_idx + 1) % print_every == 0:
+                    print(f"Epoch [{epoch+1}/{epochs}], Batch [{batch_idx+1}/{len(train_loader)}], Loss: {loss.item():.4f}")
+
+            train_acc = 100 * correct / total
+            val_loss, val_acc = evaluate_model(model, val_loader, criterion)
+            print(f"Epoch [{epoch+1}/{epochs}] Complete, Avg Loss: {running_loss/len(train_loader):.4f}, Train Acc: {train_acc:.2f}%, Val Acc: {val_acc:.2f}%, Val Loss: {val_loss:.4f}")
+
+            # Early stopping
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                early_stop_counter = 0
+                torch.save(model.state_dict(), "checkpoints/best_model.pth")
+                print("✅ Model improved and saved!")
+            else:
+                early_stop_counter += 1
+                print(f"⚠️ No improvement for {early_stop_counter}/{patience} epochs.")
+
+            if early_stop_counter >= patience:
+                print("⏹️ Early stopping triggered! Stopping training.")
+                break
+
+    # Evaluation function
+    def evaluate_model(model, val_loader):
+        model.eval()
+        correct, total = 0, 0
+        with torch.no_grad():
+            for images, labels in val_loader:
+                images, labels = images.to(device), labels.to(device)
+                outputs = model(images)
+                _, predicted = torch.max(outputs, 1)
+                correct += (predicted == labels).sum().item()
+                total += labels.size(0)
+        return 100 * correct / total
+
+    # Train the model
+    train_model(model, train_loader, val_loader, criterion, optimizer, epochs=10)
+
+
+    # Save model only inside `if __name__ == "__main__":`
+    os.makedirs("checkpoints", exist_ok=True)  # Ensure directory exists
+    torch.save(model.state_dict(), "checkpoints/efficientnet_speech_commands.pth")
+    print("Model saved successfully!")
