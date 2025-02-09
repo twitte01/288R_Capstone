@@ -50,6 +50,9 @@ if __name__ == "__main__":  # <-- Add this to prevent multiprocessing issues
     criterion = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
+    CHECKPOINT_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/model/CNN_EfficientNet/checkpoints"
+    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_model.pth")
+
     # Training function
     def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=10, patience=3, print_every=10):
         best_val_loss = float("inf")
@@ -81,11 +84,15 @@ if __name__ == "__main__":  # <-- Add this to prevent multiprocessing issues
             val_loss, val_acc = evaluate_model(model, val_loader, criterion)
             print(f"Epoch [{epoch+1}/{epochs}] Complete, Avg Loss: {running_loss/len(train_loader):.4f}, Train Acc: {train_acc:.2f}%, Val Acc: {val_acc:.2f}%, Val Loss: {val_loss:.4f}")
 
+            os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+
             # Early stopping
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
                 early_stop_counter = 0
-                torch.save(model.state_dict(), "checkpoints/best_model.pth")
+                CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_model.pth")
+                torch.save(model.state_dict(), CHECKPOINT_PATH)
+                #torch.save(model.state_dict(), "checkpoints/best_model.pth")
                 print("✅ Model improved and saved!")
             else:
                 early_stop_counter += 1
@@ -96,23 +103,31 @@ if __name__ == "__main__":  # <-- Add this to prevent multiprocessing issues
                 break
 
     # Evaluation function
-    def evaluate_model(model, val_loader):
+    def evaluate_model(model, val_loader, criterion):
         model.eval()
         correct, total = 0, 0
+        val_loss = 0.0
+
         with torch.no_grad():
             for images, labels in val_loader:
                 images, labels = images.to(device), labels.to(device)
                 outputs = model(images)
+                loss = criterion(outputs, labels)
+                val_loss += loss.item()
                 _, predicted = torch.max(outputs, 1)
                 correct += (predicted == labels).sum().item()
                 total += labels.size(0)
-        return 100 * correct / total
+
+        avg_val_loss = val_loss / len(val_loader)
+        val_acc = 100 * correct / total
+        return avg_val_loss, val_acc
 
     # Train the model
     train_model(model, train_loader, val_loader, criterion, optimizer, epochs=10)
 
 
     # Save model only inside `if __name__ == "__main__":`
-    os.makedirs("checkpoints", exist_ok=True)  # Ensure directory exists
-    torch.save(model.state_dict(), "checkpoints/efficientnet_speech_commands.pth")
+    os.makedirs(CHECKPOINT_DIR, exist_ok=True)  # Ensure directory exists
+    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "efficientnet_speech_commands.pth")
+    torch.save(model.state_dict(), CHECKPOINT_PATH)
     print("Model saved successfully!")
