@@ -47,7 +47,7 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
     criterion = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    CHECKPOINT_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/models/CNN_EfficientNet/checkpoints"
+    CHECKPOINT_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/models/CNN_ResNet/checkpoints"
     CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_model.pth")
     # Check if a checkpoint exists
     start_epoch = 0  # Default to start from scratch
@@ -158,6 +158,6 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
 
     # Save model 
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)  # Ensure directory exists
-    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "efficientnet_speech_commands.pth")
+    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "resnet_speech_commands.pth")
     torch.save(model.state_dict(), CHECKPOINT_PATH)
     print("Model saved successfully!")

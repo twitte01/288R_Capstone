@@ -25,6 +25,9 @@ venv.bak/
 data/audio/
 data/images/
 
+#ignore VGG saved models due to size issues 
+models/CNN_VGG/checkpoints/
+
 # ignore logs, including tensorboard runs 
 logs/
 
