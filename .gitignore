@@ -26,3 +26,6 @@ data/
 
 # ignore logs, including tensorboard runs 
 logs/
+
+# __pycache__
+__pycache__/
