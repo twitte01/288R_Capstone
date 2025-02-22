@@ -1,0 +1,9 @@
+Epoch [1/10] Complete, Avg Loss: 1.7757, Train Acc: 46.75%, Val Acc: 83.59%, Val Loss: 0.5319
+Epoch [2/10] Complete, Avg Loss: 0.5291, Train Acc: 85.33%, Val Acc: 87.94%, Val Loss: 0.4308
+Epoch [3/10] Complete, Avg Loss: 0.4190, Train Acc: 88.48%, Val Acc: 89.13%, Val Loss: 0.3996
+Epoch [4/10] Complete, Avg Loss: 0.3745, Train Acc: 89.80%, Val Acc: 92.23%, Val Loss: 0.2831
+Epoch [5/10] Complete, Avg Loss: 0.3472, Train Acc: 90.56%, Val Acc: 91.44%, Val Loss: 0.3101
+Epoch [6/10] Complete, Avg Loss: 1.0605, Train Acc: 77.67%, Val Acc: 3.68%, Val Loss: 3.5320
+Epoch [7/10] Complete, Avg Loss: 3.5213, Train Acc: 3.68%, Val Acc: 3.68%, Val Loss: 3.4953
+No improvement for 3/3 epochs.
+Early stopping triggered! Stopping training.
