@@ -1,0 +1,28 @@
+# Distribution / packaging
+.Python
+wheels/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# DS_Store files
+.DS_Store
+
+# ignore Data directory
+data/
+
+# ignore logs, including tensorboard runs 
+logs/
