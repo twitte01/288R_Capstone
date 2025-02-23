@@ -5,6 +5,7 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 import os
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
@@ -37,8 +38,9 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
     CHECKPOINT_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/models/CNN_VGG/checkpoints"
     CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_model.pth")
     RESULTS_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/models/CNN_VGG/results"
-    RESULTS_PATH = os.path.join(RESULTS_DIR, "test_results.txt")  # File to save results
+    RESULTS_PATH = os.path.join(RESULTS_DIR, "test_results.txt")  
     CONF_MATRIX_PATH = os.path.join(RESULTS_DIR, "confusion_matrix.png")
+    CONF_MATRIX_CSV_PATH = os.path.join(RESULTS_DIR, "confusion_matrix.csv")
 
     model = create_model(num_classes=len(test_dataset.classes))
 
@@ -78,63 +80,66 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
 
         # Compute confusion matrix
         cm = confusion_matrix(all_labels, all_preds)
-        cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]  # Normalize
+        # cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]  # Normalize
 
-        # Generate classification report
-        class_report = classification_report(all_labels, all_preds, target_names=class_names)
+        # # Generate classification report
+        # class_report = classification_report(all_labels, all_preds, target_names=class_names)
 
-        # Save results to file
-        with open(RESULTS_PATH, "w") as f:
-            # f.write(f"Test Accuracy: {test_acc:.2f}%\n\n")
-            # f.write("Classification Report:\n")
-            # f.write(class_report)
-            # f.write("\nConfusion Matrix:\n")
-            # np.savetxt(f, cm, fmt="%d")
-            # f.write("\nNormalized Confusion Matrix:\n")
-            # np.savetxt(f, cm_normalized, fmt="%.2f")
-            f.write(f"Test Accuracy: {test_acc:.2f}%\n\n")
-            f.write("Classification Report:\n")
-            f.write(class_report)
-            f.write("\nConfusion Matrix (Raw Counts):\n")
+        # # Save results to file
+        # with open(RESULTS_PATH, "w") as f:
+        #     # f.write(f"Test Accuracy: {test_acc:.2f}%\n\n")
+        #     # f.write("Classification Report:\n")
+        #     # f.write(class_report)
+        #     # f.write("\nConfusion Matrix:\n")
+        #     # np.savetxt(f, cm, fmt="%d")
+        #     # f.write("\nNormalized Confusion Matrix:\n")
+        #     # np.savetxt(f, cm_normalized, fmt="%.2f")
+        #     f.write(f"Test Accuracy: {test_acc:.2f}%\n\n")
+        #     f.write("Classification Report:\n")
+        #     f.write(class_report)
+        #     f.write("\nConfusion Matrix (Raw Counts):\n")
 
-            # Add headers (column labels)
-            f.write(" " * 12 + " ".join(f"{name[:6]:>6}" for name in class_names) + "\n")
-            f.write("-" * (12 + len(class_names) * 7) + "\n")
+        #     # Add headers (column labels)
+        #     f.write(" " * 12 + " ".join(f"{name[:6]:>6}" for name in class_names) + "\n")
+        #     f.write("-" * (12 + len(class_names) * 7) + "\n")
 
-            # Add row labels and data
-            for i, row in enumerate(cm):
-                f.write(f"{class_names[i][:10]:<10} | " + " ".join(f"{int(val):>6}" for val in row) + "\n")
+        #     # Add row labels and data
+        #     for i, row in enumerate(cm):
+        #         f.write(f"{class_names[i][:10]:<10} | " + " ".join(f"{int(val):>6}" for val in row) + "\n")
 
-            f.write("\nConfusion Matrix (Normalized):\n")
+        #     f.write("\nConfusion Matrix (Normalized):\n")
 
-            # Add headers (column labels)
-            f.write(" " * 12 + " ".join(f"{name[:6]:>6}" for name in class_names) + "\n")
-            f.write("-" * (12 + len(class_names) * 7) + "\n")
+        #     # Add headers (column labels)
+        #     f.write(" " * 12 + " ".join(f"{name[:6]:>6}" for name in class_names) + "\n")
+        #     f.write("-" * (12 + len(class_names) * 7) + "\n")
 
-            # Add row labels and normalized data
-            for i, row in enumerate(cm_normalized):
-                f.write(f"{class_names[i][:10]:<10} | " + " ".join(f"{val:.2f}" for val in row) + "\n")
+        #     # Add row labels and normalized data
+        #     for i, row in enumerate(cm_normalized):
+        #         f.write(f"{class_names[i][:10]:<10} | " + " ".join(f"{val:.2f}" for val in row) + "\n")
 
 
-        print(f"Test results saved to {RESULTS_PATH}")
+        # print(f"Test results saved to {RESULTS_PATH}")
 
-        # Plot Confusion Matrix
-        plt.figure(figsize=(12, 10))  
-        ax = sns.heatmap(cm_normalized, annot=True, fmt=".2f", cmap="Blues", 
-                         xticklabels=class_names, yticklabels=class_names, linewidths=0.5,
-                         annot_kws={"size": 10})  
+        # # Plot Confusion Matrix
+        # plt.figure(figsize=(12, 10))  
+        # ax = sns.heatmap(cm_normalized, annot=True, fmt=".2f", cmap="Blues", 
+        #                  xticklabels=class_names, yticklabels=class_names, linewidths=0.5,
+        #                  annot_kws={"size": 10})  
 
-        plt.xticks(rotation=45, ha="right", fontsize=12)  
-        plt.yticks(rotation=0, fontsize=12)
-        plt.xlabel("Predicted Labels", fontsize=14, labelpad=15)
-        plt.ylabel("True Labels", fontsize=14, labelpad=15)
-        plt.title("Confusion Matrix (Normalized)", fontsize=16, pad=15)
+        # plt.xticks(rotation=45, ha="right", fontsize=12)  
+        # plt.yticks(rotation=0, fontsize=12)
+        # plt.xlabel("Predicted Labels", fontsize=14, labelpad=15)
+        # plt.ylabel("True Labels", fontsize=14, labelpad=15)
+        # plt.title("Confusion Matrix (Normalized)", fontsize=16, pad=15)
+        # plt.tight_layout()
+        # plt.savefig(CONF_MATRIX_PATH)
+        # print(f"Confusion matrix saved to {CONF_MATRIX_PATH}")
+        # plt.show()
 
-        # Adjust layout 
-        plt.tight_layout()
-        plt.savefig(CONF_MATRIX_PATH)
-        print(f"Confusion matrix saved to {CONF_MATRIX_PATH}")
-        plt.show()
+        # Export Confusion Matrix to csv 
+        cm_df = pd.DataFrame(cm, index=class_names, columns=class_names)
+        cm_df.to_csv(CONF_MATRIX_CSV_PATH)
+        print(f"Confusion matrix saved to {CONF_MATRIX_CSV_PATH}")
 
     # Run evaluation
     evaluate_model(model, test_loader, test_dataset.classes)
