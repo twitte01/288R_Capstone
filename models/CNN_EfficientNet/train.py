@@ -36,8 +36,8 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
     val_dataset = SpeechCommandsDataset(data_dir, file_list=val_filenames, transform=transform)
 
     # Create DataLoaders
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=0, pin_memory=True)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=0, pin_memory=True)
+    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=0, pin_memory=True)
+    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=0, pin_memory=True)
 
     # Load model
     model = create_model(num_classes=len(train_dataset.classes))
