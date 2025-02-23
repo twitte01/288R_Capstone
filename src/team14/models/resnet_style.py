@@ -102,7 +102,7 @@ class ResNet(nn.Module):
 
         # residual layers
         self.layer1 = self._make_layer(block, 64,  num_blocks[0], stride=1)
-        self.laywer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
+        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
         self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
         self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
 
