@@ -17,17 +17,23 @@ class ConvLayer(nn.Module):
         return self.relu(self.bn(self.conv(x)))
 
 # The stem: a sequence of ConvLayers with the first layer doing stride-2,
-# followed by a max pooling layer.
+# followed by a max pooling layer
 def _resnet_stem(*sizes):
     # sizes should be a sequence like (in_channels, mid_channels, out_channels)
     stem_layers = [
-        ConvLayer(sizes[i], sizes[i+1], kernel_size=3, stride=2 if i == 0 else 1, padding=1)
+        ConvLayer(
+            sizes[i],   # in_channels
+            sizes[i+1], # out_channels
+            kernel_size=3,
+            stride=2 if i == 0 else 1,
+            padding=1
+        )
         for i in range(len(sizes) - 1)
     ]
     stem_layers.append(nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
     return stem_layers
 
-# Basic residual block with two 3x3 convolutions.
+# Basic residual block with two 3x3 convolutions
 class BasicBlock(nn.Module):
     expansion = 1
 
@@ -96,7 +102,7 @@ class ResNet(nn.Module):
 
         # residual layers
         self.layer1 = self._make_layer(block, 64,  num_blocks[0], stride=1)
-        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
+        self.laywer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
         self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
         self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
 
