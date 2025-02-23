@@ -26,7 +26,10 @@ data/audio/
 data/images/
 
 #ignore VGG saved models due to size issues 
-models/CNN_VGG/checkpoints/
+models/CNN_VGG/checkpoints/best_model.pth
+models/CNN_VGG/checkpoints/last_checkpoint.pth
+models/CNN_ResNet/checkpoints/best_model.pth
+models/CNN_ResNet/checkpoints/resnet_speech_commands.pth
 
 # ignore logs, including tensorboard runs 
 logs/
