@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
+import pandas as pd
 
 # Define device (MPS for Mac, CUDA for Nvidia, CPU as fallback)
 device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
@@ -39,6 +40,7 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
     RESULTS_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/models/CNN_EfficientNet/results"
     RESULTS_PATH = os.path.join(RESULTS_DIR, "test_results.txt")  
     CONF_MATRIX_PATH = os.path.join(RESULTS_DIR, "confusion_matrix.png")
+    CONF_MATRIX_CSV_PATH = os.path.join(RESULTS_DIR, "confusion_matrix.csv")
 
     model = create_model(num_classes=len(test_dataset.classes))
 
@@ -77,7 +79,7 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
 
         # Compute confusion matrix
         cm = confusion_matrix(all_labels, all_preds)
-        cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]  # Normalize
+        cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] 
 
         # Generate classification report
         class_report = classification_report(all_labels, all_preds, target_names=class_names)
@@ -128,12 +130,15 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
         plt.xlabel("Predicted Labels", fontsize=14, labelpad=15)
         plt.ylabel("True Labels", fontsize=14, labelpad=15)
         plt.title("Confusion Matrix (Normalized)", fontsize=16, pad=15)
-
-        # Adjust layout 
         plt.tight_layout()
         plt.savefig(CONF_MATRIX_PATH)
         print(f"Confusion matrix saved to {CONF_MATRIX_PATH}")
         plt.show()
+
+        # Export Confusion Matrix to csv 
+        cm_df = pd.DataFrame(cm, index=class_names, columns=class_names)
+        cm_df.to_csv(CONF_MATRIX_CSV_PATH)
+        print(f"Confusion matrix saved to {CONF_MATRIX_CSV_PATH}")
 
     # Run evaluation
     evaluate_model(model, test_loader, test_dataset.classes)
