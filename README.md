@@ -13,31 +13,49 @@
 
 
 ## Features 
-1. Data Preprocessing
-2. EDA
-3. Baseline Models
-   a. Random Forest
-   b. KNN
-4. CNN Models
-   a. VGG
-   b. ResNet
-   c. EfficientNet
-   d. Bespoke
+### Data Preprocessing
+### EDA
+### Baseline Models
+   #### Random Forest
+   #### KNN
+### CNN Models
+   #### VGG
+   #### ResNet
+   #### EfficientNet
+   #### Bespoke
 
 
 ## Installation 
-1. Clone the repository
-2. Install dependencies
-3. Access Large Files
-   3a. Dataset + Preprocessed Data
-   3b. Models
+### Clone the repository
+### Install dependencies
+### Access Large Files
+   #### Dataset + Preprocessed Data
+   #### Models
 
 ## Running Instructions 
-1. Data Preprocessing
-2. EDA
-3. Random Forest Models (Model & Analysis) 
-4. KNN (Model & Analysis) 
-5. VGG (Model & Analysis) 
-6. ResNet (Model & Analysis) 
-7. EfficientNet (Model & Analysis) 
-8. Bespoke (Model & Analysis) 
+### Data Preprocessing
+### EDA
+### Random Forest Models 
+   #### Train
+   #### Test
+   #### Evaluate 
+### KNN 
+   #### Train
+   #### Test
+   #### Evaluate 
+### VGG 
+   #### Train
+   #### Test
+   #### Evaluate 
+### ResNet
+   #### Train
+   #### Test
+   #### Evaluate 
+### EfficientNet 
+   #### Train
+   #### Test
+   #### Evaluate 
+### Bespoke 
+   #### Train
+   #### Test
+   #### Evaluate 
