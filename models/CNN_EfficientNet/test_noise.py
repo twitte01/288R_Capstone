@@ -15,7 +15,7 @@ device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if 
 print(f"Using device: {device}")
 
 # Load dataset
-data_dir = "data/images/Speech Commands (trimmed)"
+data_dir = "data/images/Speech Commands_noise"
 test_list_path = "docs/testing_list.txt"
 
 def load_filenames(file_path):
@@ -36,11 +36,11 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
 
     # Load trained model
     CHECKPOINT_DIR = "models/CNN_EfficientNet/checkpoints"
-    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "efficientnet_speech_commands.pth")
+    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "efficientnet_speech_commands_noise.pth")
     RESULTS_DIR = "models/CNN_EfficientNet/results"
-    RESULTS_PATH = os.path.join(RESULTS_DIR, "test_results.txt")  
-    CONF_MATRIX_PATH = os.path.join(RESULTS_DIR, "confusion_matrix.png")
-    CONF_MATRIX_CSV_PATH = os.path.join(RESULTS_DIR, "confusion_matrix.csv")
+    RESULTS_PATH = os.path.join(RESULTS_DIR, "test_results_noise.txt")  
+    CONF_MATRIX_PATH = os.path.join(RESULTS_DIR, "confusion_matrix_noise.png")
+    CONF_MATRIX_CSV_PATH = os.path.join(RESULTS_DIR, "confusion_matrix_noise.csv")
 
     model = create_model(num_classes=len(test_dataset.classes))
 

@@ -48,7 +48,7 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     CHECKPOINT_DIR = "/models/CNN_EfficientNet/checkpoints"
-    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_model.pth")
+    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_model_noise.pth")
     # Check if a checkpoint exists
     start_epoch = 0  # Default to start from scratch
     if os.path.exists(CHECKPOINT_PATH):
@@ -114,7 +114,7 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
                     "optimizer_state_dict": optimizer.state_dict(),
                     "best_val_loss": best_val_loss
                 }
-                torch.save(checkpoint, os.path.join(CHECKPOINT_DIR, "best_model.pth"))
+                torch.save(checkpoint, os.path.join(CHECKPOINT_DIR, "best_model_noise.pth"))
                 print("Model improved and saved!")
             else:
                 early_stop_counter += 1
@@ -125,7 +125,7 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
                 break
 
         # Save history to CSV
-        history_file = os.path.join(CHECKPOINT_DIR, "training_history.csv")
+        history_file = os.path.join(CHECKPOINT_DIR, "training_history_noise.csv")
         with open(history_file, mode="w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(["Epoch", "Train Loss", "Train Accuracy", "Val Loss", "Val Accuracy", "Learning Rate"])
@@ -158,6 +158,6 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
 
     # Save model 
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)  # Ensure directory exists
-    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "efficientnet_speech_commands.pth")
+    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "efficientnet_speech_commands_noise.pth")
     torch.save(model.state_dict(), CHECKPOINT_PATH)
     print("Model saved successfully!")
