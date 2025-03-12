@@ -47,7 +47,7 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
     criterion = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    CHECKPOINT_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/models/CNN_EfficientNet/checkpoints"
+    CHECKPOINT_DIR = "/models/CNN_EfficientNet/checkpoints"
     CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_model_noise.pth")
     # Check if a checkpoint exists
     start_epoch = 0  # Default to start from scratch
