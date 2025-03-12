@@ -1,0 +1,12 @@
+ResNet 18 clone (but with 19 layers - 2 in stem)
+Max 40 epochs
+learning_rate = 1e-3
+max_learning_rate = 1e-1
+
+learning rate = Reduce LR On Plateau
+loss function = Cross Entropy Loss
+optimizer = Adam
+
+- Stopped early after no improvement in max validation accuracy for 10 epochs
+
+- best model: rn19_epoch_14.pt
