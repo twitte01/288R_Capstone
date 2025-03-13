@@ -2,6 +2,7 @@ import os
 from torch.utils.data import Dataset
 from PIL import Image
 import torchvision.transforms as transforms
+print("test")
 
 class SpeechCommandsDataset(Dataset):
     def __init__(self, root_dir, file_list=None, transform=None):
@@ -15,8 +16,12 @@ class SpeechCommandsDataset(Dataset):
             for filename in os.listdir(class_dir):
                 if filename.endswith(".png"):
                     file_path = os.path.join(class_name, filename)  # Relative path
-                    if file_list is None or file_path in file_list:
+                    normalized_file_path = file_path.replace("\\", "/")
+
+                    if file_list is None or normalized_file_path in file_list:
                         self.data.append((file_path, self.classes.index(class_name)))
+                    
+        print(f"Total dataset size: {len(self.data)}")
 
     def __len__(self):
         return len(self.data)

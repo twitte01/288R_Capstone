@@ -9,14 +9,24 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
 import pandas as pd
+import sys
+from pathlib import Path
+from sklearn.metrics import confusion_matrix
 
 # Define device (MPS for Mac, CUDA for Nvidia, CPU as fallback)
 device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 # Load dataset
-data_dir = "data/images/Speech Commands (trimmed)"
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+data_dir = ROOT_DIR / "data" / "images" / "Trimmed"
+noise_data_dir = ROOT_DIR / "data" / "images" / "noise"
 test_list_path = "docs/testing_list.txt"
+
+# Get Class Labels
+classes = []
+for folder in os.listdir(data_dir):
+    classes.append(folder)
 
 def load_filenames(file_path):
     with open(file_path, "r") as f:
@@ -33,20 +43,32 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
 
     test_dataset = SpeechCommandsDataset(data_dir, file_list=test_filenames, transform=transform)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=4, pin_memory=True)
+    noise_test_dataset = SpeechCommandsDataset(noise_data_dir, file_list=test_filenames, transform=transform)
+    noise_test_loader = DataLoader(noise_test_dataset, batch_size=32, shuffle=False, num_workers=4, pin_memory=True)
+
 
     # Load trained model
-    CHECKPOINT_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/models/CNN_ResNet/checkpoints"
-    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "resnet_speech_commands.pth")
-    RESULTS_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/models/CNN_ResNet/results"
-    RESULTS_PATH = os.path.join(RESULTS_DIR, "test_results.txt")  
+    CHECKPOINT_DIR = ROOT_DIR / "models" / "CNN_ResNet" / "checkpoints"
+    CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_resnet.pth")
+    RESULTS_DIR = ROOT_DIR / "models" / "CNN_ResNet" / "results"
+    RESULTS_PATH = os.path.join(RESULTS_DIR, "test_results.txt")
     CONF_MATRIX_PATH = os.path.join(RESULTS_DIR, "confusion_matrix.png")
     CONF_MATRIX_CSV_PATH = os.path.join(RESULTS_DIR, "confusion_matrix.csv")
+    NOISE_RESULTS_PATH = os.path.join(RESULTS_DIR, "noise_test_results.txt")
+    NOISE_CONF_MATRIX_PATH = os.path.join(RESULTS_DIR, "noise_confusion_matrix.png")
+    NOISE_CONF_MATRIX_CSV_PATH = os.path.join(RESULTS_DIR, "noise_confusion_matrix.csv")
+
 
     model = create_model(num_classes=len(test_dataset.classes))
 
     # Ensure the checkpoint file exists before loading
+    # Load the full checkpoint
+    checkpoint = torch.load(CHECKPOINT_PATH, map_location=device)
+
+    
     if os.path.exists(CHECKPOINT_PATH):
-        model.load_state_dict(torch.load(CHECKPOINT_PATH, map_location=device))
+        # Load the model state dictionary correctly
+        model.load_state_dict(checkpoint["model_state_dict"]) 
         print(f"Model loaded from {CHECKPOINT_PATH}")
     else:
         print(f" Error: Checkpoint not found at {CHECKPOINT_PATH}")
@@ -56,7 +78,7 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
     model.eval()
 
     # Evaluate model and generate confusion matrix
-    def evaluate_model(model, test_loader, class_names):
+    def evaluate_model(model, test_loader, class_names, RESULTS_PATH, CONF_MATRIX_PATH, CONF_MATRIX_CSV_PATH):
         model.eval()
         correct, total = 0, 0
         all_preds, all_labels = [], []
@@ -80,10 +102,11 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
         # Confusion matrix
         cm = confusion_matrix(all_labels, all_preds)
         cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] 
-
+        
         # Generate classification report
         class_report = classification_report(all_labels, all_preds, target_names=class_names)
 
+        # Save results to file
         # Save results to file
         with open(RESULTS_PATH, "w") as f:
             # f.write(f"Test Accuracy: {test_acc:.2f}%\n\n")
@@ -140,5 +163,11 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
         cm_df.to_csv(CONF_MATRIX_CSV_PATH)
         print(f"Confusion matrix saved to {CONF_MATRIX_CSV_PATH}")
 
+        
     # Run evaluation
-    evaluate_model(model, test_loader, test_dataset.classes)
+    evaluate_model(model, test_loader, test_dataset.classes, RESULTS_PATH, CONF_MATRIX_PATH, CONF_MATRIX_CSV_PATH)
+
+    # Run noisy evaluation
+    evaluate_model(model, noise_test_loader, test_dataset.classes, NOISE_RESULTS_PATH, NOISE_CONF_MATRIX_PATH, NOISE_CONF_MATRIX_CSV_PATH)
+
+
