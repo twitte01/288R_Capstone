@@ -19,10 +19,14 @@
    #### Random Forest
    #### KNN
 ### CNN Models
-   #### VGG
-   #### ResNet
-   #### EfficientNet
+
    #### Bespoke
+   #### Pretrained Models 
+   We evaluated transfer learning with three pretrained CNN models, VGG-16, ResNet-18, and EfficientNet. 
+   ##### VGG-16 
+   
+   ##### ResNet
+   ##### EfficientNet
 
 
 ## Installation 
