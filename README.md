@@ -32,6 +32,10 @@
 ## Installation 
 ### Clone the repository
 ### Install dependencies
+python version 3.11.11
+```python 
+pip install -r requirements.txt
+```
 ### Access Large Files
    #### Dataset + Preprocessed Data
    #### Models
