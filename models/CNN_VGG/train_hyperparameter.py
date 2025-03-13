@@ -226,7 +226,7 @@ for i, config in enumerate(random_configs):
 
 ## ✅ Save the best model at the end of training
 if best_model_state is not None:
-    best_model_path = CHECKPOINT_DIR / "best_model.pth"
+    best_model_path = CHECKPOINT_DIR / "best_tuned_model.pth"
     torch.save({
         "model_state_dict": best_model_state,
         "best_val_acc": best_accuracy  # ✅ Save best validation accuracy too
