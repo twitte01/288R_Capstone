@@ -2,10 +2,16 @@ import torch
 from models.CNN_VGG.dataset import SpeechCommandsDataset  # Import the dataset class
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
+from pathlib import Path
 
-data_dir = "data/images/Speech Commands (trimmed)"
-val_list_path = "docs/validation_list.txt"
-train_list_path = "docs/training_list.txt"
+# Automatically detect project root directory
+PROJECT_ROOT = Path(__file__).resolve().parent.parent # Moves up to Capstone root
+CHECKPOINT_DIR = PROJECT_ROOT / "CNN_VGG" / "checkpoints"
+CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+
+data_dir = PROJECT_ROOT.parent / "data/images/Speech Commands (trimmed)"
+train_list_path = PROJECT_ROOT.parent / "docs" / "training_list.txt"
+val_list_path = PROJECT_ROOT.parent / "docs" / "validation_list.txt"
 
 # Load the validation and test filenames from the provided .txt files
 def load_filenames(file_path):

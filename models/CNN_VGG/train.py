@@ -2,19 +2,25 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 from torch.utils.data import DataLoader
-from dataset import SpeechCommandsDataset  # Import dataset
-from model import create_model  # Import model
+from pathlib import Path
+import sys
 import torchvision.transforms as transforms
 import os
 
-# Define device (MPS or CPU or GPU)
-device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
-print(f"Using device: {device}")
+from dataset import SpeechCommandsDataset
+from model import create_model
+
+# Automatically detect project root directory
+PROJECT_ROOT = Path(__file__).resolve().parent.parent # Moves up to Capstone root
+CHECKPOINT_DIR = PROJECT_ROOT / "CNN_VGG" / "checkpoints"
+CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+
 
 # Load dataset
-data_dir = "data/images/Speech Commands (trimmed)"
-val_list_path = "docs/validation_list.txt"
-train_list_path = "docs/training_list.txt"
+data_dir = PROJECT_ROOT.parent / "data/images/Speech Commands (trimmed)"
+train_list_path = PROJECT_ROOT.parent / "docs" / "training_list.txt"
+val_list_path = PROJECT_ROOT.parent / "docs" / "validation_list.txt"
+
 
 def load_filenames(file_path):
     with open(file_path, "r") as f:
@@ -24,6 +30,11 @@ if __name__ == "__main__":
     val_filenames = load_filenames(val_list_path)
     train_filenames = load_filenames(train_list_path)
 
+  # Ensure train_filenames uses forward slashes and is trimmed of extra spaces
+    train_filenames = {p.replace("\\", "/").strip() for p in train_filenames}
+    val_filenames = {p.replace("\\", "/").strip() for p in val_filenames}
+
+    
     # Define transforms
     transform = transforms.Compose([
         transforms.Resize((64, 64)),
@@ -31,9 +42,10 @@ if __name__ == "__main__":
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
 
+    
     # Create datasets
-    train_dataset = SpeechCommandsDataset(data_dir, file_list=train_filenames, transform=transform)
-    val_dataset = SpeechCommandsDataset(data_dir, file_list=val_filenames, transform=transform)
+    train_dataset = SpeechCommandsDataset(str(data_dir), file_list=train_filenames, transform=transform)
+    val_dataset = SpeechCommandsDataset(str(data_dir), file_list=val_filenames, transform=transform)
 
     # Create DataLoaders
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4, pin_memory=True)
@@ -41,17 +53,15 @@ if __name__ == "__main__":
 
     # Load model
     model = create_model(num_classes=len(train_dataset.classes))
-    model.to(device)
+    model.to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
 
     # Define loss and optimizer
     criterion = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     # Paths for saving models
-    CHECKPOINT_DIR = "/Users/taylorwitte/Documents/288R_Capstone/288R_Capstone/models/CNN_VGG/checkpoints"
-    os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-    BEST_MODEL_PATH = os.path.join(CHECKPOINT_DIR, "best_model.pth")
-    LAST_CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "last_checkpoint.pth")
+    BEST_MODEL_PATH = CHECKPOINT_DIR / "VGG_model.pth"
+    LAST_CHECKPOINT_PATH = CHECKPOINT_DIR / "last_checkpoint.pth"
 
     # Function to save a checkpoint
     def save_checkpoint(model, optimizer, epoch, loss, path):
@@ -67,7 +77,7 @@ if __name__ == "__main__":
     # Function to load checkpoint
     def load_checkpoint(model, optimizer, path):
         if os.path.exists(path):
-            checkpoint = torch.load(path, map_location=device)
+            checkpoint = torch.load(path, map_location=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
             model.load_state_dict(checkpoint['model_state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
             start_epoch = checkpoint['epoch'] + 1  # Resume from next epoch

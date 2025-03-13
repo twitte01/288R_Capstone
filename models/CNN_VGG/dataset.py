@@ -5,19 +5,21 @@ import torchvision.transforms as transforms
 
 class SpeechCommandsDataset(Dataset):
     def __init__(self, root_dir, file_list=None, transform=None):
+        
         self.root_dir = root_dir
         self.transform = transform
         self.data = []
-        self.classes = sorted([d for d in os.listdir(root_dir) if os.path.isdir(os.path.join(root_dir, d)) and d != "_background_noise_"])
-
+        self.classes = sorted([d for d in os.listdir(root_dir) if os.path.isdir(os.path.join(root_dir, d)) and d !=  "_background_noise_"])
+        
         for class_name in self.classes:
             class_dir = os.path.join(root_dir, class_name)
             for filename in os.listdir(class_dir):
                 if filename.endswith(".png"):
-                    file_path = os.path.join(class_name, filename)  # Relative path
+                    file_path = os.path.join(class_name, filename).replace("\\", "/")  
                     if file_list is None or file_path in file_list:
                         self.data.append((file_path, self.classes.index(class_name)))
 
+        
     def __len__(self):
         return len(self.data)
 
