@@ -17,7 +17,7 @@ CHECKPOINT_DIR = PROJECT_ROOT / "CNN_VGG" / "checkpoints"
 RESULTS_DIR = PROJECT_ROOT / "CNN_VGG" / "results"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)  # Ensure results directory exists
 
-CHECKPOINT_PATH = CHECKPOINT_DIR / "best_model.pth"
+CHECKPOINT_PATH = CHECKPOINT_DIR / "Noise_trained_VGG_model.pth"
 RESULTS_PATH = RESULTS_DIR / "noise_trained_model_test_results.txt"
 CONF_MATRIX_PATH = RESULTS_DIR / "noise_trained_model_confusion_matrix.png"
 CONF_MATRIX_CSV = RESULTS_DIR / "noise_trained_model_confusion_matrix.csv"
