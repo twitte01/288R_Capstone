@@ -142,7 +142,7 @@ Note if you are using a conda environment, it is recommended to use conda instal
    ```bash 
    python models/CNN_EfficientNet/test_noisy.py
    ```
-   The results in test_results_noise.txt, confusion_matrix_noise.csv and confusion_matrix_noise.png in models/CNN_EfficientNet/results. The testing and training results are compared to the VGG-16, ResNet-18, Bespoke and baseline models in the '???' section of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder.
+   The results in test_results_noise.txt, confusion_matrix_noise.csv and confusion_matrix_noise.png in models/CNN_EfficientNet/results. The testing and training results are compared to the VGG-16, ResNet-18, Bespoke and baseline models in the 'Test Noisy Data: Model Trained on Noisy Data' & 'Test Trimmed Data: Model Trained on Noisy Data' sections of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder.
 ### Bespoke 
    #### Train
    #### Test
