@@ -31,6 +31,10 @@
 
 # Installation 
 ### Clone the repository
+Clone the main branch of the repository
+```bash  
+git clone https://github.com/twitte01/288R_Capstone.git
+```
 ### Install dependencies
 Ensure you have Python 3.11.11 installed. 
 To keep dependencies isolated, we recommend using a virtual environment. 
