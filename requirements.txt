@@ -15,7 +15,6 @@ torchsummary==1.5.1
 fqdn==1.5.1
 isoduration==20.11.0
 jsonpointer==3.0.0
-jupyter==1.1.1
 librosa==0.10.2.post1
 pipdeptree==2.25.1
 tinycss2==1.4.0
@@ -26,3 +25,4 @@ numpy==1.23.3
 torch==2.2.2
 torchaudio==2.2.2
 torchvision==0.17.2
+jupyter==1.1.1
