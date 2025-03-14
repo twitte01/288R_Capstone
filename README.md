@@ -46,14 +46,9 @@ Note if you are using a conda environment, it is recommended to use conda instal
 # Running Instructions 
 ## Data Preprocessing
 ## EDA
-## Random Forest Models 
+## Baseline Models 
    ### Train
-   ### Test
-   ### Evaluate 
-## KNN 
-   ### Train
-   ### Test
-   ### Evaluate 
+   Run the baseline_models.ipynb notebook. This will use the correct data pipeline to build the MFCC features dataset and train the models using grid search. It will plot graphs showing the results also.
 ## VGG 
    ### Training Initial Model
    To train the initial VGG-16 CNN model using our pre-trained architectures with initial hyperparameters inside the project root run: 
@@ -97,20 +92,21 @@ Note if you are using a conda environment, it is recommended to use conda instal
    The results in noise_trained_model_test_results.txt, noise_trained_model_confusion_matrix.png and noise_trained_model_confusion_matrix.csv in models/CNN_VGG/results. The testing and training results are compared to the VGG-16, ResNet-18, Bespoke and baseline models in the '???' section of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder.
 ## ResNet
    ### Training Initial Model
-   To train the initial ResNet-18 CNN model using our pre-trained architectures with initial hyperparameters inside the project root run: 
+   To train the initial ResNet-18 CNN model using our pre-trained architectures and using random search to test hyperparameters inside the project root run: 
    ```bash 
    python models/CNN_ResNet/train.py
    ```
-   This will save the model as best_model.pth and the training history as training_history.csv in models/CNN_ResNet/checkpoints. 
+   This will save the model as best_resnet.pth in models/CNN_ResNet/checkpoints. 
    ### Testing Initial Model
    Once trained, the models can be evaluated on the test dataset by running 
    ```bash 
    python models/CNN_ResNet/test.py
    ```
-   The results in test_results.txt, confusion_matrix.csv and confusion_matrix.png in models/CNN_ResNet/results. The testing and training results are compared to the initial VGG-16, EfficientNet, Bespoke and baseline models in the 'Initial Model Comparison' section of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder. 
+   This will test on the normal test set and the test set with added background noise. The results in test_results.txt, confusion_matrix.csv and confusion_matrix.png, noise_test_results.txt, noise_confusion_matrix.csv and noise_confusion_matrix.png will be in models/CNN_ResNet/results. The testing and training results are compared to the initial VGG-16, EfficientNet, Bespoke and baseline models in the 'Initial Model Comparison' section of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder. 
    ### Hyperparameter Tuning 
+   Hyperparameter Tuning is done in the train.py where it does a random search and saves the best model
    ### Test
-   ### Evaluate 
+   Running python models/CNN_ResNet/test.py will test on the normal test set and the test set with added background noise. The results in test_results.txt, confusion_matrix.csv and confusion_matrix.png, noise_test_results.txt, noise_confusion_matrix.csv and noise_confusion_matrix.png will be in models/CNN_ResNet/results. The testing and training results are compared to the initial VGG-16, EfficientNet, Bespoke and baseline models in the 'Initial Model Comparison' section of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder. 
 ## EfficientNet 
    ### Training Initial Model
    To train the initial EfficientNet-B0 CNN model using our pre-trained architectures with initial hyperparameters inside the project root run: 

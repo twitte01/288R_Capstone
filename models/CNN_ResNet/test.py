@@ -19,8 +19,8 @@ print(f"Using device: {device}")
 
 # Load dataset
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
-data_dir = ROOT_DIR / "data" / "images" / "Trimmed"
-noise_data_dir = ROOT_DIR / "data" / "images" / "noise"
+data_dir = ROOT_DIR / "data" / "images" / "Speech Commands (trimmed)"
+noise_data_dir = ROOT_DIR / "data" / "images" / "Speech Commandss (noise)"
 test_list_path = "docs/testing_list.txt"
 
 # Get Class Labels

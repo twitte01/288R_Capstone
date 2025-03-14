@@ -10,9 +10,6 @@ import csv
 import random
 from pathlib import Path
 
-
-print("testing")
-
 # Define device (MPS or CPU or GPU)
 device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
@@ -24,7 +21,7 @@ def load_filenames(file_path):
 if __name__ == "__main__":  #  Prevent multiprocessing issues
     # Load dataset
     ROOT_DIR = Path(__file__).resolve().parent.parent.parent
-    data_dir = ROOT_DIR / "data" / "images" / "Trimmed"
+    data_dir = ROOT_DIR / "data" / "images" / "Speech Commands (trimmed)"
     val_list_path = ROOT_DIR / "docs" / "validation_list.txt"
     train_list_path = ROOT_DIR / "docs" / "training_list.txt"
     val_filenames = load_filenames(val_list_path)
