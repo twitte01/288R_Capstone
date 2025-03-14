@@ -29,23 +29,39 @@
    ##### EfficientNet
 
 
-# Installation 
+# Installation
+
 ### Clone the repository
 Clone the main branch of the repository
 ```bash  
 git clone https://github.com/twitte01/288R_Capstone.git
 ```
+
+### Setup Virtual Environment
+As with any Python project, using a virtual environment is recommended.  
+This will depend on your system. As an example
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
 ### Install dependencies
 Ensure you have Python 3.11.11 installed. 
-To keep dependencies isolated, we recommend using a virtual environment. 
-Once inside your virtual environment, install the required dependencies. 
-```python 
+```bash 
 pip install -r requirements.txt
 ```
 Note if you are using a conda environment, it is recommended to use conda install as pip install can lead to installation issues and Jupyter kernel crashes. 
-### Access Large Files
-   #### Dataset + Preprocessed Data
-   #### Models
+
+### Download Large Data
+
+Some of the files -- image and audio data, and large models -- are stored on Google Drive, as they are larger than Github limits.
+
+From a terminal, at the **project root** (the directory you cloned the repo into), run the following to download this data:  
+```bash
+python src/data_downloader.py
+```
+
+It might take some time to download and unpack the files. The script should say "Finished" when it is done.
 
 # Running Instructions 
 ## Data Preprocessing
