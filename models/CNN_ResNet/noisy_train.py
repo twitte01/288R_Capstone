@@ -38,7 +38,7 @@ def load_filenames(file_path):
 if __name__ == "__main__":  #  Prevent multiprocessing issues
     # Load dataset
     ROOT_DIR = Path(__file__).resolve().parent.parent.parent
-    noisy_data_dir = ROOT_DIR / "data" / "images" / "Speech Commands_noise"
+    noisy_data_dir = ROOT_DIR / "data" / "images" / "Speech Commands (noise)"
     val_list_path = ROOT_DIR / "docs" / "validation_list.txt"
     train_list_path = ROOT_DIR / "docs" / "training_list.txt"
     val_filenames = load_filenames(val_list_path)
@@ -68,14 +68,11 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
     def train_noisy_model(lr, batch_size, optimizer_name, epochs=10):
         """Train a fresh model on noisy data using best hyperparameters."""
         
-        # Load noisy dataset
-        noisy_data_dir = "data/noisy_images"  # Adjust path for noisy data
-        train_dataset = SpeechCommandsDataset(noisy_data_dir, transform=transform)
-        
-        # Create DataLoader for noisy data
+        # Create DataLoaders with the given batch_size
         train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
+        val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0, pin_memory=True)
 
-        # Initialize fresh model
+        # Initialize model
         model = create_model(num_classes=len(train_dataset.classes))
         model.to(device)
 
@@ -89,6 +86,9 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
 
         # Define loss function
         criterion = nn.CrossEntropyLoss()
+
+        # Training history
+        training_history = []
 
         # Training loop
         for epoch in range(epochs):
@@ -111,11 +111,14 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
             train_acc = 100 * correct / total
             print(f"Epoch [{epoch+1}/{epochs}], Loss: {running_loss:.4f}, Accuracy: {train_acc:.2f}%")
 
-        # Evaluate on validation set
-        val_loss, val_acc = evaluate_model(model, val_loader, criterion)
+            # Evaluate on validation set
+            val_loss, val_acc = evaluate_model(model, val_loader, criterion)
+
+            # Save training history for this epoch
+            training_history.append([epoch + 1, running_loss, train_acc, val_loss, val_acc])
 
         print(f"Final Validation Accuracy: {val_acc:.2f}%")
-        return model, optimizer, val_acc
+        return model, optimizer, val_acc, training_history
 
     
     # Evaluation function
@@ -144,7 +147,7 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
     optimizer_name = best_params["optimizer"]
 
     # Train the fresh model on noisy data
-    noisy_model, best_optimizer, val_acc = train_noisy_model(lr=lr, batch_size=batch_size, optimizer_name=optimizer_name, epochs=10)
+    noisy_model, best_optimizer, val_acc, training_history = train_noisy_model(lr=lr, batch_size=batch_size, optimizer_name=optimizer_name, epochs=10)
 
     # Ensure checkpoint directory exists
     os.makedirs(NOISY_CHECKPOINT_DIR, exist_ok=True)
@@ -157,3 +160,12 @@ if __name__ == "__main__":  #  Prevent multiprocessing issues
     }, NOISY_CHECKPOINT_PATH)
 
     print(f"Trained noisy model saved at {NOISY_CHECKPOINT_PATH}")
+
+    # Save training history for best model
+    history_file = os.path.join(CHECKPOINT_DIR, "noisy_training_history.csv")
+    with open(history_file, mode="w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Epoch", "Train Loss", "Train Acc", "Val Loss", "Val Acc"])
+        writer.writerows(training_history)
+
+    print(f"Best model training history saved to {history_file}")

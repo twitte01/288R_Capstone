@@ -31,6 +31,7 @@ models/CNN_VGG/checkpoints/last_checkpoint.pth
 models/CNN_ResNet/checkpoints/best_model.pth
 models/CNN_ResNet/checkpoints/resnet_speech_commands.pth
 models/CNN_ResNet/checkpoints/best_resnet.pth
+models/CNN_ResNet/checkpoints/noisy_resnet.pth
 
 # ignore logs, including tensorboard runs 
 logs/

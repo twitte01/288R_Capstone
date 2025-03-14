@@ -2,7 +2,7 @@ import os
 from torch.utils.data import Dataset
 from PIL import Image
 import torchvision.transforms as transforms
-print("test")
+
 
 class SpeechCommandsDataset(Dataset):
     def __init__(self, root_dir, file_list=None, transform=None):
