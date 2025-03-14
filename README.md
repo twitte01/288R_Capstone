@@ -67,8 +67,34 @@ Note if you are using a conda environment, it is recommended to use conda instal
    python models/CNN_VGG/test.py
    ```
    The results in test_results.txt, confusion_matrix.csv and confusion_matrix.png in models/CNN_VGG/results. The testing and training results are compared to the initial ResNet, EfficientNet, Bespoke and baseline models in the 'Initial Model Comparison' section of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder. 
-   ### Test
-   ### Evaluate 
+   ### Hyperparameter Tuning with Random Search
+   We performed hyperparameter tuning using random search. Note, since we are performing random search, you may end up with different random configurations. To run the tuning process:
+   ```bash 
+   python models/CNN_VGG/train_hyperparameter.py
+   ```
+   This script will generate multiple model configurations and save each model configuration in models/CNN_VGG/checkpoints. The tuned model with the best results will be saved as best_tuned_model.pth. 
+   ### Analyzing Hyperparameter-Tuning Model Performance
+   To evaluate and compare the performance of different CNN models, including initial models and those from hyperparameter tuning, use the 'Hyperparameter Tuning Results' section (VGG subsection) in the CNN_Results_Analysis.ipynb notebook in the notebooks folder. Running the train_hyperparameter.py script will also create a hyperparemeter_tuning_results.csv that contains the configuration of the highest performing model, train loss, train accuracy, validation loss, validation accuracy, cohen kappa score, and MCC score. 
+   ### Testing the Best Model 
+   Once the best model configuration is determined from the hyperparameter tuning, the model can be tested on the test set to evaluate performance by running
+   ```bash 
+   python models/CNN_VGG/test_hyperparameter.py
+   ```
+   Running test.py will create a confusion matrix named tuned_best_model_test_results.txt, tuned_best_model_confusion_matrix.png, and tuned_best_model_confusion_matrix.csv at this location: models/CNN_VGG/results
+   ### Testing the Best Model on Noisy Data
+   To test the best model (selected from the tuning results) on noisy data, run the 'Test Noisy Data: Models Trained on Clean Data' section in the CNN_Results_Analysis.ipynb notebook in the notebooks folder. 
+   ### Training on Noisy Data
+   After selecting the best hyperparameters, the final CNN model is trained using noisy data:
+   ```bash 
+   python models/CNN_VGG/train_noise.py
+   ```
+   This will save the model as Noise_trained_VGG_model.pth and the training history as VGG_noise_training_history.csv in models/CNN_VGG/results that contains the epoch, training loss, validation loss, train accuracy, and validation accuracy. 
+   ### Testing Model Trained on Noisy Data
+   Once the noise-trained model is ready, test its performance by running: After selecting the best hyperparameters, the final CNN model is trained using noisy data:
+   ```bash 
+   python models/CNN_VGG/test_noise.py
+   ```
+   The results in noise_trained_model_test_results.txt, noise_trained_model_confusion_matrix.png and noise_trained_model_confusion_matrix.csv in models/CNN_VGG/results. The testing and training results are compared to the VGG-16, ResNet-18, Bespoke and baseline models in the '???' section of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder.
 ## ResNet
    ### Training Initial Model
    To train the initial ResNet-18 CNN model using our pre-trained architectures with initial hyperparameters inside the project root run: 
