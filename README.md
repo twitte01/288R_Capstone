@@ -21,6 +21,27 @@
 ### CNN Models
 
    #### Bespoke
+
+   Using PyTorch, we created a CNN to classify the spectrograms. This model closely followed the ResNet architecture, although we didn't use a pre-trained ResNet. While we also evaluated pretrained models, our goal here was to evalute performance on a modern CNN architecture, but one trained only on our data.
+
+   - Stem
+      - Two convolutional layers (32 and 64 filters) with batch normalization and ReLU
+      - Max pooling layer to reduce spatial dimensions
+
+   - Four Residual layers;
+      - Layer 1: Two BasicBlocks with 64 channels
+      - Layer 2: Two BasicBlocks with 128 channels
+      - Layer 3: Two BasicBlocks with 256 channels
+      - Layer 4: Two BasicBlocks with 512 channels
+
+   - Fully Connected Layer
+      - One fully connected layer (Linear) with 35 output classes
+
+Each BasicBlock follows the standard ResNet design with two convolutional layers, batch normalization, and a residual connection. When the number of channels increases between layers, there's a 1x1 convolution in the skip connection to match dimensions.
+
+The model has 11.2M parameters, with most concentrated in the later convolutional layers.
+
+
    #### Pretrained Models 
    We evaluated transfer learning with three pretrained CNN models, VGG-16, ResNet-18, and EfficientNet. 
    ##### VGG-16 
