@@ -38,7 +38,7 @@ def load_filenames(file_path):
 if __name__ == "__main__":  #  Prevent multiprocessing issues
     # Load dataset
     ROOT_DIR = Path(__file__).resolve().parent.parent.parent
-    noisy_data_dir = ROOT_DIR / "data" / "images" / "Speech Commands (noise)"
+    noisy_data_dir = ROOT_DIR / "data" / "images" / "Speech Commands_noise"
     val_list_path = ROOT_DIR / "docs" / "validation_list.txt"
     train_list_path = ROOT_DIR / "docs" / "training_list.txt"
     val_filenames = load_filenames(val_list_path)
