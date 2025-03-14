@@ -7,6 +7,9 @@ learning rate = Reduce LR On Plateau
 loss function = Cross Entropy Loss
 optimizer = Adam
 
+Full dataset (using splits from train, val, test text files)
+
 - Stopped early after no improvement in max validation accuracy for 10 epochs
+  (stopped after 24 epochs)
 
 - best model: rn19_epoch_14.pt

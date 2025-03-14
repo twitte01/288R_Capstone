@@ -1,4 +1,4 @@
-ResNet 18 clone (but with 19 layers - 2 in stem)
+ResNet 18 clone
 fraction = 0.4
 50 epochs
 learning_rate = 3e-3

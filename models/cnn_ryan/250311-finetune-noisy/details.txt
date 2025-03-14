@@ -1,0 +1,11 @@
+Fine-tune of 250307-0336 model
+
+Max Epochs = 25
+learning rate = 1e-4
+loss function = Cross Entropy Loss
+optimizer = Adam
+
+Fine-tuned on just Noisy images
+
+- baseline accuracy plummeted, noisy accuracy barely improved
+- best checkpoint: rn19_epoch_7.pt
