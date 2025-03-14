@@ -20,7 +20,7 @@ print(f"Using device: {device}")
 # Load dataset
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 data_dir = ROOT_DIR / "data" / "images" / "Speech Commands (trimmed)"
-noise_data_dir = ROOT_DIR / "data" / "images" / "Speech Commandss (noise)"
+noisy_data_dir = ROOT_DIR / "data" / "images" / "Speech Commands (noise)"
 test_list_path = "docs/testing_list.txt"
 
 # Get Class Labels
@@ -43,7 +43,7 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
 
     test_dataset = SpeechCommandsDataset(data_dir, file_list=test_filenames, transform=transform)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=4, pin_memory=True)
-    noise_test_dataset = SpeechCommandsDataset(noise_data_dir, file_list=test_filenames, transform=transform)
+    noise_test_dataset = SpeechCommandsDataset(noisy_data_dir, file_list=test_filenames, transform=transform)
     noise_test_loader = DataLoader(noise_test_dataset, batch_size=32, shuffle=False, num_workers=4, pin_memory=True)
 
 
@@ -62,16 +62,20 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
     model = create_model(num_classes=len(test_dataset.classes))
 
     # Ensure the checkpoint file exists before loading
-    # Load the full checkpoint
-    checkpoint = torch.load(CHECKPOINT_PATH, map_location=device)
-
-    
     if os.path.exists(CHECKPOINT_PATH):
-        # Load the model state dictionary correctly
+        checkpoint = torch.load(CHECKPOINT_PATH, map_location=device)
+        
+        # Load model state
         model.load_state_dict(checkpoint["model_state_dict"]) 
+        
+        # Retrieve best hyperparameters
+        best_params = checkpoint.get("params", None)
+
         print(f"Model loaded from {CHECKPOINT_PATH}")
+        if best_params:
+            print(f"Best Parameters Used: {best_params}")
     else:
-        print(f" Error: Checkpoint not found at {CHECKPOINT_PATH}")
+        print(f"Error: Checkpoint not found at {CHECKPOINT_PATH}")
         exit()
 
     model.to(device)
@@ -101,7 +105,9 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
 
         # Confusion matrix
         cm = confusion_matrix(all_labels, all_preds)
-        cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] 
+        
+        # Normalize the confusion matrix safely (avoid division by zero)
+        cm_normalized = cm.astype('float') / np.where(cm.sum(axis=1)[:, np.newaxis] != 0, cm.sum(axis=1)[:, np.newaxis], 1)
         
         # Generate classification report
         class_report = classification_report(all_labels, all_preds, target_names=class_names)
@@ -109,13 +115,6 @@ if __name__ == "__main__":  # Prevent multiprocessing issues
         # Save results to file
         # Save results to file
         with open(RESULTS_PATH, "w") as f:
-            # f.write(f"Test Accuracy: {test_acc:.2f}%\n\n")
-            # f.write("Classification Report:\n")
-            # f.write(class_report)
-            # f.write("\nConfusion Matrix:\n")
-            # np.savetxt(f, cm, fmt="%d")
-            # f.write("\nNormalized Confusion Matrix:\n")
-            # np.savetxt(f, cm_normalized, fmt="%.2f")
             f.write(f"Test Accuracy: {test_acc:.2f}%\n\n")
             f.write("Classification Report:\n")
             f.write(class_report)

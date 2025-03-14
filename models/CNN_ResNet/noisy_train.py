@@ -12,6 +12,8 @@ from pathlib import Path
 
 # Define checkpoint path
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+CHECKPOINT_DIR = ROOT_DIR / "models" / "CNN_ResNet" / "checkpoints"
+CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_resnet.pth")
 NOISY_CHECKPOINT_DIR = ROOT_DIR / "models" / "CNN_ResNet" / "checkpoints"
 NOISY_CHECKPOINT_PATH = os.path.join(NOISY_CHECKPOINT_DIR, "noisy_resnet.pth")
 
