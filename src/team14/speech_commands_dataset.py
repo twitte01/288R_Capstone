@@ -21,4 +21,6 @@ class SpeechCommandsDataset(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        return image, label
+        filename = os.path.basename(self.file_list[idx])
+
+        return image, label, filename
