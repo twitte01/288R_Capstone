@@ -56,10 +56,7 @@ The model has 11.2M parameters, with most concentrated in the later convolutiona
 
 
    #### Pretrained Models 
-   We evaluated transfer learning with three pretrained CNN models, VGG-16, ResNet-18, and EfficientNet. 
-   ##### VGG-16 
-   ##### ResNet
-   ##### EfficientNet
+   Using PyTorch, We evaluated transfer learning with three pretrained CNN models, VGG-16, ResNet-18, and EfficientNet. The original fully connected layer of the pretrained models designed for 1,000 ImageNet classes was replaced to suit our dataset. The number of input features was adjusted to the pretrained models, followed by a fully connected linear layer that reduces dimensionality to 256. A ReLU activation function introduced non-linearity, and a dropout layer with a 50% probability was added to mitigate overfitting. Then, a final linear output layer mapped the 256 features to 35, which is the number of classes in our dataset, and a LogSoftmax function converted output logits into log probabilities.
 
 
 # Installation
