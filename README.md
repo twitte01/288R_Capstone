@@ -17,13 +17,20 @@ Additionally, to assess model robustness to noise, we introduce an augmentation 
 
 Our results demonstrate that while pre-trained models provide strong baselines, our bespoke model, after fine-tuning, achieves competitive performance. This study highlights the effectiveness of CNN-based classification for speech commands and the impact of noise augmentation on model generalization.
 
-
-## Features 
 ### Data Preprocessing
+
+The audio files for our dataset were preprocesed by trimming the files prior to converting to visual representations in the form of Mel Frequency Ceptstral Coefficeints (MFCCs) or Mel Spectrograms for downstream model input. 
+
 ### EDA
+EDA was performed on the dataset to illustrate dataset distribution for class sizes, audio length, and sample rate distribution. Examples of audio files are visualized through waveforms, MFCCs, and mel spectrograms. To further gain insight upon the dataset, pitch and zero crossing rate statistics were extracted from the audio files using the librosa python package. From this, differences between words in terms of pitch and how smooth the word is were able to be visualized across the dataset. 
+
 ### Baseline Models
    #### Random Forest
+   Random Forest is an ensemble learning method that builds multiple decision trees and aggregates their predictions for improved accuracy and robustness. Random Forest models have been one of the earliest applied ML methods for classifying audio samples and are therefore can provide a great baseline model for our dataset. Audio samples were first converted to 13 dimensional MFCC vectors prior to being input into the random forest model. 
+   
    #### KNN
+   A K- nearest neighbors ML model was applied to the dataset as a baseline model. K nearest neighbors is a simple method for classifying audio samples based on the classes of the N nearest neighbors to the audio sample of question and therefore a good baseline model to use. Once again, audio files were represented in 13 dimenisons using the MFCCs and these were the input to the KNN model. Hyperparameter tuning was performed on the model to achieve an optimal test accuracy on the test set. 
+   
 ### CNN Models
 
    #### Bespoke
@@ -51,7 +58,6 @@ The model has 11.2M parameters, with most concentrated in the later convolutiona
    #### Pretrained Models 
    We evaluated transfer learning with three pretrained CNN models, VGG-16, ResNet-18, and EfficientNet. 
    ##### VGG-16 
-   
    ##### ResNet
    ##### EfficientNet
 
@@ -136,7 +142,7 @@ It might take some time to download and unpack the files. The script should say 
    ```bash 
    python models/CNN_VGG/test_noise.py
    ```
-   The results in noise_trained_model_test_results.txt, noise_trained_model_confusion_matrix.png and noise_trained_model_confusion_matrix.csv in models/CNN_VGG/results. The testing and training results are compared to the VGG-16, ResNet-18, Bespoke and baseline models in the '???' section of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder.
+   The results in noise_trained_model_test_results.txt, noise_trained_model_confusion_matrix.png and noise_trained_model_confusion_matrix.csv in models/CNN_VGG/results. The testing and training results are compared to the VGG-16, ResNet-18, Bespoke and baseline models in the 'Test Noisy Data: Model Trained on Noisy Data' & 'Test Trimmed Data: Model Trained on Noisy Data' sections of the CNN_Exploratory_Analysis.ipynb notebook in the notebooks folder.
 ## ResNet
    ### Training Initial Model
    To train the initial ResNet-18 CNN model using our pre-trained architectures and using random search to test hyperparameters inside the project root run: 
