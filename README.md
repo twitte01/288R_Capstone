@@ -11,6 +11,12 @@
 
 ## Description 
 
+Accurately classifying spoken words is a critical task in speech recognition. In this work, we investigate convolutional neural networks (CNNs) for classifying 35 classes of short (around 1 second) spoken audio samples. Our approach converts the audio data into spectrogram images. We evaluate transfer learning with pre-trained CNN models (VGG-16, ResNet-18, and EfficientNet) and develop a bespoke ResNet-style model using PyTorch, trained on our image data.''
+
+Additionally, to assess model robustness to noise, we introduce an augmentation step by blending white noise into the audio, then generate additional spectrograms. We analyze model performance on clean and noisy test sets, and then fine-tune the models on the noisy images, again evaluating performance on clean and noisy test sets. A second approach is tried on the bespoke model, where we fine-tune on both the clean and noisy images. This method greatly improves accuracy on the noisy set, while avoiding catastrophic forgetting and maintaining accuracy on the clean set.
+
+Our results demonstrate that while pre-trained models provide strong baselines, our bespoke model, after fine-tuning, achieves competitive performance. This study highlights the effectiveness of CNN-based classification for speech commands and the impact of noise augmentation on model generalization.
+
 
 ## Features 
 ### Data Preprocessing
